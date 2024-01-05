@@ -1,38 +1,35 @@
 require('dotenv').config();
-const request = require('request-promise');
+const axios = require('axios');
 const fs = require('fs');
+const FormData = require('form-data');
 
 async function uploadToIPFS(filePath, fileName, contentType) {
-    const options = {
-        method: 'POST',
-        url: 'https://api.quicknode.com/ipfs/rest/v1/s3/put-object',
-        headers: {
-          'x-api-key': `${process.env.QUICKNODE_API_KEY}`
-        },
-        formData: {
-          Body: {
-            value: fs.createReadStream(filePath),
-            options: {
-              filename: '',
-              contentType: null
-            }
-          },
-          Key: fileName,
-          'ContentType': contentType
-        }
-    };
     try {
-      const response = await request(options);
-      return JSON.parse(response);
-    } catch(error) {
-      console.error('Error uploading to IPFS:', error);
-      throw error;
-    };
+        const formData = new FormData();
+        formData.append('Body', fs.createReadStream(filePath));
+        formData.append('Key', fileName);
+        formData.append('ContentType', contentType);
+
+        const response = await axios.post(
+            'https://api.quicknode.com/ipfs/rest/v1/s3/put-object',
+            formData,
+            {
+                headers: {
+                    ...formData.getHeaders(),
+                    'x-api-key': `${process.env.QUICKNODE_API_KEY}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error uploading to IPFS:', error);
+        throw error;
+    }
 }
 
 function createNFTMetadata(filePath, imageUrl) {
     const name = 'NFT name';
-    const description  = 'NFT description';
+    const description = 'NFT description';
     const metadata = {
         name,
         description,
@@ -44,15 +41,15 @@ function createNFTMetadata(filePath, imageUrl) {
 
 async function main() {
     try {
-        for(let i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             const imageName = `image_${i}.png`;
             const imagePath = `./${imageName}`;
 
             // Upload image
             const imageUploadResponse = await uploadToIPFS(
-              imagePath, 
-              imageName, 
-              'image/png'
+                imagePath,
+                imageName,
+                'image/png'
             );
             console.log('Image uploaded:', imageUploadResponse);
 
@@ -67,7 +64,7 @@ async function main() {
                 metadataPath,
                 metadataFile,
                 'application/json'
-              );
+            );
             console.log('Metadata uploaded:', metadataUploadResponse);
         }
     } catch (error) {
