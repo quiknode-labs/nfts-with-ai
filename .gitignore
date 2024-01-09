@@ -10,3 +10,4 @@ nft/docs/
 
 # Dotenv file
 .env
+nft/.env
