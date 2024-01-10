@@ -54,7 +54,7 @@ async function main() {
             console.log('Image uploaded:', imageUploadResponse);
 
             // Create metadata
-            const imageUrl = `https://ipfs.io/ipfs/${imageUploadResponse.pin.cid}`;
+            const imageUrl = `https://quicknode.quicknode-ipfs.com/ipfs/${imageUploadResponse.pin.cid}`;
             const metadataFile = `metadata_${i}.json`;
             const metadataPath = `./${metadataFile}`;
             createNFTMetadata(metadataPath, imageUrl);
