@@ -10,7 +10,7 @@ const generateImage = async (prompt) => {
                 prompt: prompt,
                 n: 5, // Number of images to generate
                 size: "1024x1024", // Size of the image
-                response_format: "b64_json"
+                response_format: "b64_json" // Returns the file itself, encoded as base64 JSON, this way we can directly save it
             },
             {
                 headers: {
