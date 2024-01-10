@@ -7,7 +7,7 @@ const ipfs = create('http://127.0.0.1:5001');
 async function uploadToIPFS(filePath) {
 
     try {
-	    const response = await ipfs.add(fs.createReadStream(filePath));
+        const response = await ipfs.add(fs.createReadStream(filePath));
 
         return response;
     } catch (error) {
@@ -40,7 +40,7 @@ async function main() {
             console.log('Image uploaded:', imageUploadResponse);
 
             // Create metadata
-            const imageUrl = `https://ipfs.io/ipfs/${imageUploadResponse.cid}`;
+            const imageUrl = `https://quicknode.quicknode-ipfs.com/ipfs/${imageUploadResponse.cid}`;
             const metadataFile = `metadata_${i}.json`;
             const metadataPath = `./${metadataFile}`;
             createNFTMetadata(metadataPath, imageUrl);
